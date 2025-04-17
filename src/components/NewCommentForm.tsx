@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
-  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const [nameErr, setNameErr] = useState(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -33,13 +33,11 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
     }
 
     setCommentBody('');
-
     handleClearErrors();
   };
 
   const handleClearAfterSubmit = () => {
     setCommentBody('');
-
     handleClearErrors();
   };
 
@@ -73,13 +71,13 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
       body,
     };
 
-    setIsFormSubmitting(true);
+    setIsSubmitting(true);
     try {
       await onCommentAdd(newComment);
       handleClearAfterSubmit();
     } catch {
     } finally {
-      setIsFormSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -92,11 +90,11 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
 
   return (
     <form data-cy="NewCommentForm" onSubmit={handleFormSubmit}>
+      {/* Name */}
       <div className="field" data-cy="NameField">
         <label className="label" htmlFor="comment-author-name">
           Author Name
         </label>
-
         <div className="control has-icons-left has-icons-right">
           <input
             type="text"
@@ -107,11 +105,9 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
             ref={nameInputRef}
             onChange={() => setNameErr(false)}
           />
-
           <span className="icon is-small is-left">
             <i className="fas fa-user" />
           </span>
-
           {nameErr && (
             <span
               className="icon is-small is-right has-text-danger"
@@ -121,7 +117,6 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
             </span>
           )}
         </div>
-
         {nameErr && (
           <p className="help is-danger" data-cy="ErrorMessage">
             Name is required
@@ -129,11 +124,11 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
         )}
       </div>
 
+      {/* Email */}
       <div className="field" data-cy="EmailField">
         <label className="label" htmlFor="comment-author-email">
           Author Email
         </label>
-
         <div className="control has-icons-left has-icons-right">
           <input
             type="text"
@@ -144,11 +139,9 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
             ref={emailInputRef}
             onChange={() => setEmailErr(false)}
           />
-
           <span className="icon is-small is-left">
             <i className="fas fa-envelope" />
           </span>
-
           {emailErr && (
             <span
               className="icon is-small is-right has-text-danger"
@@ -158,7 +151,6 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
             </span>
           )}
         </div>
-
         {emailErr && (
           <p className="help is-danger" data-cy="ErrorMessage">
             Email is required
@@ -166,11 +158,11 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
         )}
       </div>
 
+      {/* Comment */}
       <div className="field" data-cy="BodyField">
         <label className="label" htmlFor="comment-body">
           Comment Text
         </label>
-
         <div className="control">
           <textarea
             id="comment-body"
@@ -181,7 +173,6 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
             onChange={handleChangeCommentBody}
           />
         </div>
-
         {commentErr && (
           <p className="help is-danger" data-cy="ErrorMessage">
             Enter some text
@@ -189,20 +180,19 @@ export const NewCommentForm: React.FC<Props> = ({ onCommentAdd, postId }) => {
         )}
       </div>
 
+      {/* Buttons */}
       <div className="field is-grouped">
         <div className="control">
           <button
             type="submit"
             className={classNames('button is-link', {
-              'is-loading': isFormSubmitting,
+              'is-loading': isSubmitting,
             })}
           >
             Add
           </button>
         </div>
-
         <div className="control">
-          {/* eslint-disable-next-line react/button-has-type */}
           <button
             type="reset"
             className="button is-link is-light"

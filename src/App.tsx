@@ -19,10 +19,9 @@ export const App = () => {
   const [userPosts, setUserPosts] = useState<Post[]>([]);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [users, setUsers] = useState<User[]>([]);
-  const [areLoading, setareLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isErrorFetchPosts, setIsErrorFetchPosts] = useState(false);
 
-  //#region useEffect
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -49,7 +48,7 @@ export const App = () => {
 
     const fetchPosts = async () => {
       setIsErrorFetchPosts(false);
-      setareLoading(true);
+      setIsLoading(true);
       try {
         const result = await client.get<Post[]>(
           `/posts?userId=${selectedUser.id}`,
@@ -59,15 +58,13 @@ export const App = () => {
       } catch {
         setIsErrorFetchPosts(true);
       } finally {
-        setareLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchPosts();
   }, [selectedUser]);
-  //#endregion
 
-  //#region handlers
   const handleUserSelect = (newUser: User) => {
     setSelectedUser(newUser);
     setSelectedPost(null);
@@ -76,7 +73,6 @@ export const App = () => {
   const handlePostSelect = (newPost: Post | null) => {
     setSelectedPost(newPost);
   };
-  //#endregion
 
   return (
     <main className="section">
@@ -97,9 +93,9 @@ export const App = () => {
                   <p data-cy="NoSelectedUser">No user selected</p>
                 )}
 
-                {areLoading && <Loader />}
+                {isLoading && <Loader />}
 
-                {!areLoading && isErrorFetchPosts && (
+                {!isLoading && isErrorFetchPosts && (
                   <div
                     className="notification is-danger"
                     data-cy="PostsLoadingError"
@@ -108,13 +104,13 @@ export const App = () => {
                   </div>
                 )}
 
-                {!areLoading && !userPosts.length && !isErrorFetchPosts && (
+                {!isLoading && !userPosts.length && !isErrorFetchPosts && (
                   <div className="notification is-warning" data-cy="NoPostsYet">
                     No posts yet
                   </div>
                 )}
 
-                {!areLoading && userPosts.length > 0 && (
+                {!isLoading && userPosts.length > 0 && (
                   <PostsList
                     posts={userPosts}
                     selectedPost={selectedPost}
